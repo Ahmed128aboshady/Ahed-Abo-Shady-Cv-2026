@@ -62439,14 +62439,16 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
           e.volume = 0.3 + r * 0.08, e.rate = 0.9 + Math.random() * 0.2;
         }
       }), this.sounds.honk = this.game.audio.register({
-        path: "sounds/vehicle/honk/Car Horn Long 4.mp3",
-        autoplay: true,
-        loop: true,
-        volume: 0.4,
-        antiSpam: 0.1,
-        onPlaying: (e) => {
-          e.volume = this.game.inputs.actions.get("honk").active ? 0.5 : 0;
+        path: "sounds/pirate/cannon_1.wav",
+        autoplay: false,
+        loop: false,
+        volume: 0.85,
+        antiSpam: 0.4,
+        onPlay: (e) => {
+          e.volume = 0.8 + Math.random() * 0.2, e.rate = 0.9 + Math.random() * 0.2;
         }
+      }), this.game.inputs.actions.get("honk").events.on("press", () => {
+        this.sounds.honk.play();
       }), this.sounds.spring1 = this.game.audio.register({
         path: "sounds/vehicle/springs/HandleSqueak_BW.60329.mp3",
         autoplay: false,
@@ -62489,14 +62491,14 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
           a > 0 ? e.volume += a * this.game.ticker.deltaScaled * 20 : e.volume += a * this.game.ticker.deltaScaled * 5, e.rate = 0.8;
         }
       }), this.game.audio.register({
-        path: "sounds/vehicle/engine/muscle car engine loop idle.mp3",
+        path: "sounds/pirate/sailing.wav",
         autoplay: true,
         loop: true,
         volume: 0,
         onPlaying: (e) => {
-          const r = Math.abs(this.game.player.accelerating) * 0.5, s = this.game.player.boosting + 1, a = Math.max(0.05, r * s * 0.8) - e.volume, h = a > 0 ? 10 : 2.5;
+          const r = Math.abs(this.game.player.accelerating) * 0.5, s = this.game.player.boosting + 1, a = Math.max(0.08, r * s * 0.75) - e.volume, h = a > 0 ? 10 : 2.5;
           e.volume += a * this.game.ticker.deltaScaled * h;
-          const c = remapClamp$2(r * s, 0, 1, 0.6, 1.1);
+          const c = remapClamp$2(r * s, 0, 1, 0.8, 1.25);
           e.rate += (c - e.rate) * this.game.ticker.deltaScaled * 5;
         }
       }), this.game.audio.register({
@@ -93507,30 +93509,32 @@ https://github.com/browserify/crypto-browserify`);
     }
     update() {
       const e = this.game.physicalVehicle;
-      this.parts.chassis.position.copy(e.position), this.parts.chassis.quaternion.copy(e.quaternion), this.wheels.steering += (this.game.player.steering * e.steeringAmplitude - this.wheels.steering) * this.game.ticker.deltaScaled * 16;
-      const r = e.forwardSpeed / e.wheels.settings.radius * 6e-3;
-      for (let a = 0; a < 4; a++) {
-        const h = this.wheels.items[a], c = e.wheels.items[a];
-        (!this.game.inputs.actions.get("brake").active || this.game.inputs.actions.get("forward").active || this.game.inputs.actions.get("backward").active) && (a === 0 || a === 2 ? h.cylinder.rotation.z += r : h.cylinder.rotation.z -= r), a === 0 && (h.container.rotation.y = Math.PI + this.wheels.steering), a === 1 && (h.container.rotation.y = this.wheels.steering);
-        const d = c.suspensionLength;
-        let f = c.basePosition.y - d;
-        if (f = Math.min(f, -0.5), h.container.position.x = c.basePosition.x, h.container.position.y += (f - h.container.position.y) * 25 * this.game.ticker.deltaScaled, h.container.position.z = c.basePosition.z, h.suspension) {
-          const p = Math.abs(h.container.position.y) - 0.5;
-          h.suspension.scale.y = p;
+      this.parts.chassis.position.copy(e.position), this.parts.chassis.quaternion.copy(e.quaternion);
+      const r = Math.sin(this.game.ticker.elapsed * 2.8) * 0.035, s = -this.game.player.steering * 0.14;
+      this.parts.chassis.position.y += r, this.parts.chassis.rotation.z += s, this.wheels.steering += (this.game.player.steering * e.steeringAmplitude - this.wheels.steering) * this.game.ticker.deltaScaled * 16;
+      const o = e.forwardSpeed / e.wheels.settings.radius * 6e-3;
+      for (let c = 0; c < 4; c++) {
+        const d = this.wheels.items[c], f = e.wheels.items[c];
+        (!this.game.inputs.actions.get("brake").active || this.game.inputs.actions.get("forward").active || this.game.inputs.actions.get("backward").active) && (c === 0 || c === 2 ? d.cylinder.rotation.z += o : d.cylinder.rotation.z -= o), c === 0 && (d.container.rotation.y = Math.PI + this.wheels.steering), c === 1 && (d.container.rotation.y = this.wheels.steering);
+        const p = f.suspensionLength;
+        let m = f.basePosition.y - p;
+        if (m = Math.min(m, -0.5), d.container.position.x = f.basePosition.x, d.container.position.y += (m - d.container.position.y) * 25 * this.game.ticker.deltaScaled, d.container.position.z = f.basePosition.z, d.suspension) {
+          const b = Math.abs(d.container.position.y) - 0.5;
+          d.suspension.scale.y = b;
         }
-        h.groundTrack.update(c.contactPoint, c.inContact);
+        d.groundTrack.update(f.contactPoint, f.inContact);
       }
       if (this.mainGroundTrack.update(e.position, e.position.y < 1.5), this.antenna) {
-        const a = Math.atan2(this.antenna.target.x - e.position.x, this.antenna.target.z - e.position.z);
-        this.antenna.object.rotation.y = a - this.parts.chassis.rotation.y, this.antenna.headReference.getWorldPosition(this.antenna.head.position), this.antenna.head.lookAt(this.antenna.target);
-        const h = this.antenna.target.distanceTo(e.position), c = remapClamp$2(h, 50, 5, 1, 10);
-        this.antenna.headAxle.rotation.z += this.game.ticker.deltaScaled * c;
+        const c = Math.atan2(this.antenna.target.x - e.position.x, this.antenna.target.z - e.position.z);
+        this.antenna.object.rotation.y = c - this.parts.chassis.rotation.y, this.antenna.headReference.getWorldPosition(this.antenna.head.position), this.antenna.head.lookAt(this.antenna.target);
+        const d = this.antenna.target.distanceTo(e.position), f = remapClamp$2(d, 50, 5, 1, 10);
+        this.antenna.headAxle.rotation.z += this.game.ticker.deltaScaled * f;
       }
       this.game.player.braking ? (this.parts.stopLights && (this.parts.stopLights.visible = true), this.parts.backLights && (this.parts.backLights.visible = true, this.parts.backLights.material = this.game.materials.getFromName("emissiveOrangeRadialGradient"))) : (this.parts.stopLights && (this.parts.stopLights.visible = false), this.parts.backLights && (this.game.player.accelerating < 0 ? (this.parts.backLights.visible = true, this.parts.backLights.material = this.backLights.material) : this.parts.backLights.visible = false));
-      const s = e.goingForward && this.game.player.boosting && this.game.player.accelerating > 0 ? 1 : 0;
-      this.boostTrails.leftReference.getWorldPosition(this.boostTrails.left.position), this.boostTrails.left.alpha = s, this.boostTrails.rightReference.getWorldPosition(this.boostTrails.right.position), this.boostTrails.right.alpha = s, this.boostAnimation.mix += (this.game.player.boosting ? 1 : -1) * this.game.ticker.deltaScaled * this.boostAnimation.speed, this.boostAnimation.mix = clamp$3(this.boostAnimation.mix, 0, 1), this.boostAnimation.mixUniform.value = 1 - Math.pow(1 - this.boostAnimation.mix, 7), this.parts.energy && (this.parts.cell1.position.y = remapClamp$2(this.boostAnimation.mix, 0, 0.6, 0.2, 0), this.parts.cell3.position.y = remapClamp$2(this.boostAnimation.mix, 0.2, 0.8, 0.2, 0), this.parts.cell2.position.y = remapClamp$2(this.boostAnimation.mix, 0.4, 1, 0.2, 0));
-      const o = new Vector3$1();
-      o.setFromMatrixPosition(this.parts.chassis.matrixWorld), o.project(this.game.view.camera), this.screenPosition.x = o.x * 0.5 + 0.5, this.screenPosition.y = o.y * -0.5 + 0.5;
+      const a = e.goingForward && this.game.player.boosting && this.game.player.accelerating > 0 ? 1 : 0;
+      this.boostTrails.leftReference.getWorldPosition(this.boostTrails.left.position), this.boostTrails.left.alpha = a, this.boostTrails.rightReference.getWorldPosition(this.boostTrails.right.position), this.boostTrails.right.alpha = a, this.boostAnimation.mix += (this.game.player.boosting ? 1 : -1) * this.game.ticker.deltaScaled * this.boostAnimation.speed, this.boostAnimation.mix = clamp$3(this.boostAnimation.mix, 0, 1), this.boostAnimation.mixUniform.value = 1 - Math.pow(1 - this.boostAnimation.mix, 7), this.parts.energy && (this.parts.cell1.position.y = remapClamp$2(this.boostAnimation.mix, 0, 0.6, 0.2, 0), this.parts.cell3.position.y = remapClamp$2(this.boostAnimation.mix, 0.2, 0.8, 0.2, 0), this.parts.cell2.position.y = remapClamp$2(this.boostAnimation.mix, 0.4, 1, 0.2, 0));
+      const h = new Vector3$1();
+      h.setFromMatrixPosition(this.parts.chassis.matrixWorld), h.project(this.game.view.camera), this.screenPosition.x = h.x * 0.5 + 0.5, this.screenPosition.y = h.y * -0.5 + 0.5;
     }
   }
   const skewedUv = Fn$1(([l, e]) => vec2$1(l.x.add(l.y.mul(e.x)), l.y.add(l.x.mul(e.y)))), twistedCylinder = Fn$1(([l, e, r, s, o]) => {
@@ -98729,6 +98733,10 @@ https://github.com/browserify/crypto-browserify`);
     }
     setPlaylist() {
       this.playlist = {}, this.playlist.songs = [
+        {
+          path: "sounds/pirate/pirate_theme.wav",
+          name: "Pirate Shanty \u2014 Jolly Roger"
+        },
         {
           path: "sounds/musics/Sudo.mp3",
           name: "Sudo.mp3"
@@ -108380,7 +108388,7 @@ ${e.tab}if ( ${m} ) {
           }
         ]
       ]), this.options = new Options(), this.respawns = new Respawns("landing"), this.view = new View(), this.rendering.setPostprocessing(), this.rendering.start(), this.reveal = new Reveal(), this.noises = new Noises(), this.weather = new Weather(), this.wind = new Wind(), this.tracks = new Tracks(), this.lighting = new Lighting(), this.fog = new Fog(), this.water = new Water(), this.materials = new Materials(), this.objects = new Objects(), this.explosions = new Explosions(), this.world = new World();
-      const a = __vitePreload(() => import("./rapier-CtCnJWM1.js").then(async (m) => {
+      const a = __vitePreload(() => import("./rapier-Cyjvkeg0.js").then(async (m) => {
         await m.__tla;
         return m;
       }), [], import.meta.url), h = this.resourcesLoader.load([
