@@ -62422,7 +62422,7 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
         "low"
       ];
       const e = this.game.respawns.getDefault();
-      this.position = e.position.clone(), this.basePosition = this.position.clone(), this.position2 = new Vector2$1(this.position.x, this.position.z), this.rotationY = 0, this.setSounds(), this.setInputs(), this.setDistanceDriven(), this.setUnstuck(), this.setFlip(), this.setTimePlayed(), this.game.physicalVehicle.chassis.physical.initialState.position.x = e.position.x, this.game.physicalVehicle.chassis.physical.initialState.position.y = e.position.y, this.game.physicalVehicle.chassis.physical.initialState.position.z = e.position.z, this.game.physicalVehicle.moveTo(e.position, e.rotation), this.game.ticker.events.on("tick", () => {
+      this.position = e.position.clone(), this.basePosition = this.position.clone(), this.position2 = new Vector2$1(this.position.x, this.position.z), this.rotationY = 0, this.setInputs(), this.setSounds(), this.setDistanceDriven(), this.setUnstuck(), this.setFlip(), this.setTimePlayed(), this.game.physicalVehicle.chassis.physical.initialState.position.x = e.position.x, this.game.physicalVehicle.chassis.physical.initialState.position.y = e.position.y, this.game.physicalVehicle.chassis.physical.initialState.position.z = e.position.z, this.game.physicalVehicle.moveTo(e.position, e.rotation), this.game.ticker.events.on("tick", () => {
         this.updatePrePhysics();
       }, 1), this.game.ticker.events.on("tick", () => {
         this.updatePostPhysics();
@@ -62435,8 +62435,8 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
         loop: false,
         volume: 0.4,
         antiSpam: 0.1,
-        onPlay: (e, r) => {
-          e.volume = 0.3 + r * 0.08, e.rate = 0.9 + Math.random() * 0.2;
+        onPlay: (r, s) => {
+          r.volume = 0.3 + s * 0.08, r.rate = 0.9 + Math.random() * 0.2;
         }
       }), this.sounds.honk = this.game.audio.register({
         path: "sounds/pirate/cannon_1.wav",
@@ -62444,10 +62444,12 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
         loop: false,
         volume: 0.85,
         antiSpam: 0.4,
-        onPlay: (e) => {
-          e.volume = 0.8 + Math.random() * 0.2, e.rate = 0.9 + Math.random() * 0.2;
+        onPlay: (r) => {
+          r.volume = 0.8 + Math.random() * 0.2, r.rate = 0.9 + Math.random() * 0.2;
         }
-      }), this.game.inputs.actions.get("honk").events.on("press", () => {
+      });
+      const e = this.game.inputs.actions.get("honk");
+      (e == null ? void 0 : e.events) && e.events.on("press", () => {
         this.sounds.honk.play();
       }), this.sounds.spring1 = this.game.audio.register({
         path: "sounds/vehicle/springs/HandleSqueak_BW.60329.mp3",
@@ -62455,8 +62457,8 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
         loop: false,
         volume: 0.4,
         antiSpam: 1,
-        onPlay: (e, r) => {
-          e.volume = 0.05 + r * 0.02, e.rate = 1 + Math.random() * 0.1;
+        onPlay: (r, s) => {
+          r.volume = 0.05 + s * 0.02, r.rate = 1 + Math.random() * 0.1;
         }
       }), this.sounds.spring2 = this.game.audio.register({
         path: "sounds/vehicle/springs/SpringMetalMovements_1u54Y_01.mp3",
@@ -62464,8 +62466,8 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
         loop: false,
         volume: 0.4,
         antiSpam: 0.2,
-        onPlay: (e, r) => {
-          e.volume = 0.05 + r * 0.1, e.rate = 0.9 + Math.random() * 0.4;
+        onPlay: (r, s) => {
+          r.volume = 0.05 + s * 0.1, r.rate = 0.9 + Math.random() * 0.4;
         }
       }), this.game.audio.register({
         group: "wheelsOnFloor",
@@ -62473,9 +62475,9 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
         autoplay: true,
         loop: true,
         volume: 0,
-        onPlaying: (e) => {
-          const s = remapClamp$2(Math.abs(this.game.physicalVehicle.position.y - 1.08), 0, 2, 1, 0), o = Math.min(1, this.game.physicalVehicle.xzSpeed * 0.1);
-          e.volume = s * o * 0.25;
+        onPlaying: (r) => {
+          const o = remapClamp$2(Math.abs(this.game.physicalVehicle.position.y - 1.08), 0, 2, 1, 0), a = Math.min(1, this.game.physicalVehicle.xzSpeed * 0.1);
+          r.volume = o * a * 0.25;
         }
       }), this.game.audio.register({
         group: "wheelsOnFloor",
@@ -62483,45 +62485,45 @@ body:has(#profiler-panel:not(.visible)) .detached-tab-panel {
         autoplay: true,
         loop: true,
         volume: 0,
-        onPlaying: (e) => {
-          const r = (1 - Math.abs(this.game.physicalVehicle.forwardRatio)) * 0.6;
-          let s = Math.max(r, this.game.player.braking) * this.game.physicalVehicle.xzSpeed * 0.15 * this.game.physicalVehicle.wheels.inContactCount / 4;
-          s = clamp$3(s, 0, 1);
-          const a = s * 0.4 - e.volume;
-          a > 0 ? e.volume += a * this.game.ticker.deltaScaled * 20 : e.volume += a * this.game.ticker.deltaScaled * 5, e.rate = 0.8;
+        onPlaying: (r) => {
+          const s = (1 - Math.abs(this.game.physicalVehicle.forwardRatio)) * 0.6;
+          let o = Math.max(s, this.game.player.braking) * this.game.physicalVehicle.xzSpeed * 0.15 * this.game.physicalVehicle.wheels.inContactCount / 4;
+          o = clamp$3(o, 0, 1);
+          const h = o * 0.4 - r.volume;
+          h > 0 ? r.volume += h * this.game.ticker.deltaScaled * 20 : r.volume += h * this.game.ticker.deltaScaled * 5, r.rate = 0.8;
         }
       }), this.game.audio.register({
         path: "sounds/pirate/sailing.wav",
         autoplay: true,
         loop: true,
         volume: 0,
-        onPlaying: (e) => {
-          const r = Math.abs(this.game.player.accelerating) * 0.5, s = this.game.player.boosting + 1, a = Math.max(0.08, r * s * 0.75) - e.volume, h = a > 0 ? 10 : 2.5;
-          e.volume += a * this.game.ticker.deltaScaled * h;
-          const c = remapClamp$2(r * s, 0, 1, 0.8, 1.25);
-          e.rate += (c - e.rate) * this.game.ticker.deltaScaled * 5;
+        onPlaying: (r) => {
+          const s = Math.abs(this.game.player.accelerating) * 0.5, o = this.game.player.boosting + 1, h = Math.max(0.08, s * o * 0.75) - r.volume, c = h > 0 ? 10 : 2.5;
+          r.volume += h * this.game.ticker.deltaScaled * c;
+          const d = remapClamp$2(s * o, 0, 1, 0.8, 1.25);
+          r.rate += (d - r.rate) * this.game.ticker.deltaScaled * 5;
         }
       }), this.game.audio.register({
         path: "sounds/vehicle/spin/41051 Glass stone turning loop 09-full.mp3",
         autoplay: true,
         loop: true,
         volume: 0,
-        onPlaying: (e) => {
-          const r = clamp$3(this.game.physicalVehicle.xzSpeed * 0.1, 0, 1), o = r * 0.3 - e.volume, a = o > 0 ? 10 : 2.5;
-          e.volume += o * this.game.ticker.deltaScaled * a;
-          const h = remapClamp$2(r, 0, 1, 1, 2);
-          e.rate += (h - e.rate) * this.game.ticker.deltaScaled * 5;
+        onPlaying: (r) => {
+          const s = clamp$3(this.game.physicalVehicle.xzSpeed * 0.1, 0, 1), a = s * 0.3 - r.volume, h = a > 0 ? 10 : 2.5;
+          r.volume += a * this.game.ticker.deltaScaled * h;
+          const c = remapClamp$2(s, 0, 1, 1, 2);
+          r.rate += (c - r.rate) * this.game.ticker.deltaScaled * 5;
         }
       }), this.game.audio.register({
         path: "sounds/vehicle/energy/Energy_-_force_field_8_loop.mp3",
         autoplay: true,
         loop: true,
         volume: 0,
-        onPlaying: (e) => {
-          const r = 0.5 + Math.abs(this.game.player.accelerating) * 0.5, s = this.game.player.boosting, a = r * s * 0.3 - e.volume, h = a > 0 ? 10 : 1;
-          e.volume += a * this.game.ticker.deltaScaled * h;
-          const c = 0.95 + Math.abs(this.game.player.accelerating) * 2;
-          e.rate += (c - e.rate) * this.game.ticker.deltaScaled * 5;
+        onPlaying: (r) => {
+          const s = 0.5 + Math.abs(this.game.player.accelerating) * 0.5, o = this.game.player.boosting, h = s * o * 0.3 - r.volume, c = h > 0 ? 10 : 1;
+          r.volume += h * this.game.ticker.deltaScaled * c;
+          const d = 0.95 + Math.abs(this.game.player.accelerating) * 2;
+          r.rate += (d - r.rate) * this.game.ticker.deltaScaled * 5;
         }
       });
     }
@@ -93394,7 +93396,7 @@ https://github.com/browserify/crypto-browserify`);
           const o = r.name.match(s);
           o && (this.parts[o[0]] = r);
         }
-      }), this.parts.chassis.rotation.reorder("YXZ"), this.game.materials.updateObject(this.parts.chassis), this.game.scene.add(this.parts.chassis), this.parts.blinkerLeft && (this.parts.blinkerLeft.visible = false), this.parts.blinkerRight && (this.parts.blinkerRight.visible = false), this.parts.stopLights && (this.parts.stopLights.visible = false), this.parts.backLights && (this.parts.backLights.visible = false), this.game.materials.updateObject(this.parts.wheelContainer);
+      }), this.parts.chassis.rotation.reorder("YXZ"), this.parts.bodyPainted && this.parts.bodyPainted.parent !== this.parts.chassis && this.parts.chassis.add(this.parts.bodyPainted), this.game.materials.updateObject(this.parts.chassis), this.game.scene.add(this.parts.chassis), this.parts.blinkerLeft && (this.parts.blinkerLeft.visible = false), this.parts.blinkerRight && (this.parts.blinkerRight.visible = false), this.parts.stopLights && (this.parts.stopLights.visible = false), this.parts.backLights && (this.parts.backLights.visible = false), this.game.materials.updateObject(this.parts.wheelContainer);
     }
     setPaints() {
       var _a2, _b, _c;
@@ -93469,7 +93471,7 @@ https://github.com/browserify/crypto-browserify`);
         const r = {};
         r.container = this.parts.wheelContainer.clone(true), this.parts.chassis.add(r.container), r.container.traverse((s) => {
           s.name.match(/^wheelSuspension/) && (r.suspension = s), s.name.match(/^wheelCylinder/) && (r.cylinder = s), s.name.match(/^wheelPainted/) && (r.painted = s);
-        }), r.cylinder.position.set(0, 0, 0), (e === 0 || e === 2) && (r.container.rotation.y = Math.PI), r.groundTrack = this.game.tracks.add(new Track(0.5, "r")), this.wheels.items.push(r);
+        }), r.cylinder && r.cylinder.position.set(0, 0, 0), (e === 0 || e === 2) && (r.container.rotation.y = Math.PI), r.groundTrack = this.game.tracks.add(new Track(0.5, "r")), this.wheels.items.push(r);
       }
     }
     setBlinkers() {
@@ -93493,7 +93495,13 @@ https://github.com/browserify/crypto-browserify`);
       });
     }
     setAntenna() {
-      this.parts.antenna && (this.antenna = {}, this.antenna.target = new Vector3$1(0, 2, 0), this.antenna.target = new Vector3$1(0, 2, 0), this.antenna.object = this.parts.antenna, this.antenna.head = this.game.resources.vehicle.scene.getObjectByName("antennaHead"), this.antenna.headAxle = this.antenna.head.children[0], this.antenna.headReference = this.antenna.object.getObjectByName("antennaHeadReference"), this.game.materials.updateObject(this.antenna.head), this.game.scene.add(this.antenna.head));
+      if (this.parts.antenna) {
+        if (this.antenna = {}, this.antenna.target = new Vector3$1(0, 2, 0), this.antenna.target = new Vector3$1(0, 2, 0), this.antenna.object = this.parts.antenna, this.antenna.head = this.game.resources.vehicle.scene.getObjectByName("antennaHead"), !this.antenna.head || !this.antenna.head.children || !this.antenna.head.children[0]) {
+          delete this.antenna;
+          return;
+        }
+        this.antenna.headAxle = this.antenna.head.children[0], this.antenna.headReference = this.antenna.object.getObjectByName("antennaHeadReference"), this.game.materials.updateObject(this.antenna.head), this.game.scene.add(this.antenna.head);
+      }
     }
     setBoostTrails() {
       this.boostTrails = {}, this.boostTrails.instance = new Trails(), this.boostTrails.leftReference = new Object3D$1(), this.boostTrails.leftReference.position.set(-1.28, 0.1, -0.55), this.parts.chassis.add(this.boostTrails.leftReference), this.boostTrails.left = this.boostTrails.instance.create(), this.boostTrails.leftReference.getWorldPosition(this.boostTrails.left.position), this.boostTrails.rightReference = new Object3D$1(), this.boostTrails.rightReference.position.set(-1.28, 0.1, 0.55), this.parts.chassis.add(this.boostTrails.rightReference), this.boostTrails.right = this.boostTrails.instance.create(), this.boostTrails.rightReference.getWorldPosition(this.boostTrails.right.position);
@@ -97397,6 +97405,7 @@ https://github.com/browserify/crypto-browserify`);
       }), this.position.copy(e);
     }
     updatePrePhysics() {
+      if (!this.game.player) return;
       const e = lerp$1(this.topSpeed, this.topSpeedBoost, this.game.player.boosting), r = Math.max(0, this.speed - e);
       let s = this.game.player.accelerating * (1 + this.game.player.boosting * this.boostMultiplier) * this.engineForceAmplitude / (1 + r) * this.game.ticker.deltaScaled, o = this.game.player.braking;
       !this.game.player.braking && Math.abs(this.game.player.accelerating) < 0.1 && (o = this.idleBrake), this.speed > 0.5 && (this.game.player.accelerating > 0 && !this.goingForward || this.game.player.accelerating < 0 && this.goingForward) && (o = this.reverseBrake, s = 0), o *= this.brakeAmplitude * this.game.ticker.deltaScaled;
@@ -108388,7 +108397,7 @@ ${e.tab}if ( ${m} ) {
           }
         ]
       ]), this.options = new Options(), this.respawns = new Respawns("landing"), this.view = new View(), this.rendering.setPostprocessing(), this.rendering.start(), this.reveal = new Reveal(), this.noises = new Noises(), this.weather = new Weather(), this.wind = new Wind(), this.tracks = new Tracks(), this.lighting = new Lighting(), this.fog = new Fog(), this.water = new Water(), this.materials = new Materials(), this.objects = new Objects(), this.explosions = new Explosions(), this.world = new World();
-      const a = __vitePreload(() => import("./rapier-Cyjvkeg0.js").then(async (m) => {
+      const a = __vitePreload(() => import("./rapier-Be3aYqbY.js").then(async (m) => {
         await m.__tla;
         return m;
       }), [], import.meta.url), h = this.resourcesLoader.load([
