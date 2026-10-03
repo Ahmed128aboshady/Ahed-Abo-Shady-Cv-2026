@@ -1,13 +1,13 @@
 import * as THREE from 'three/webgpu'
 
 const text = `
-██████╗ ██████╗ ██╗   ██╗███╗   ██╗ ██████╗ ██╗███████╗                   
-██╔══██╗██╔══██╗██║   ██║████╗  ██║██╔═══██╗╚═╝██╔════╝                   
-██████╔╝██████╔╝██║   ██║██╔██╗ ██║██║   ██║   ███████╗                   
-██╔══██╗██╔══██╗██║   ██║██║╚██╗██║██║   ██║   ╚════██║                   
-██████╔╝██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝   ███████║                   
-╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝    ╚══════╝                   
-                                                                       
+█████╗ ██╗  ██╗███╗   ███╗███████╗██████╗ 
+██╔══██╗██║  ██║████╗ ████║██╔════╝██╔══██╗
+███████║███████║██╔████╔██║█████╗  ██║  ██║
+██╔══██║██╔══██║██║╚██╔╝██║██╔══╝  ██║  ██║
+██║  ██║██║  ██║██║ ╚═╝ ██║███████╗██████╔╝
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═════╝ 
+                                           
 ██████╗  ██████╗ ██████╗ ████████╗███████╗ ██████╗ ██╗     ██╗ ██████╗ 
 ██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝██╔════╝██╔═══██╗██║     ██║██╔═══██╗
 ██████╔╝██║   ██║██████╔╝   ██║   █████╗  ██║   ██║██║     ██║██║   ██║
@@ -35,45 +35,32 @@ const text = `
 ╚═══════════════════════╝
 
 ╔═ Three.js ════════════╗
-║ Three.js is the library I’m using to render this 3D world (release: ${THREE.REVISION})
+║ Three.js is the library used to render this 3D world (release: ${THREE.REVISION})
 ║ https://threejs.org/
-║ It was created by mr.doob (https://x.com/mrdoob, https://github.com/mrdoob),
-║ followed by hundreds of awesome developers,
-║ one of which being Sunag (https://x.com/sea3dformat, https://github.com/sunag) who added TSL,
-║ enabling the use of both WebGL and WebGPU, making this portfolio possible.
+║ Utilizing WebGPU & TSL (Three.js Shading Language) for cutting-edge graphics performance.
 ╚═══════════════════════╝
 
-╔═ Three.js Journey ════╗
-║ If you want to learn Three.js, I got you covered with this huge course.
-║ https://threejs-journey.com/
-║ It contains everything you need to start building awesome stuff with Three.js (and much more).
+╔═ About Ahmed ═════════╗
+║ Senior Odoo Developer & ERP Solutions Architect with 5+ years of experience.
+║ Specializing in enterprise ERP customization, PostgreSQL optimization,
+║ scalable microservices, and modern web applications.
 ╚═══════════════════════╝
 
-╔═ Devlogs ═════════════╗
-║ I’ve been making devlogs since the very start of this portfolio
-║ and you can find them all on my Youtube channel.
-║ https://www.youtube.com/@BrunoSimon
+╔═ Live Projects ═══════╗
+║ Odoo Enterprise Live ⇒ https://ahmed-abo-shady.odoo.com
+║ Web CV & Portfolio   ⇒ https://ahmed128aboshady.github.io/Ahmed-Abo-Shady-CV/
+║ GitHub Repositories  ⇒ https://github.com/Ahmed128aboshady
 ╚═══════════════════════╝
 
 ╔═ Source code ═════════╗
-║ The code is available on GitHub under MIT license. Even the Blender files are there, so have fun!
-║ https://github.com/brunosimon/folio-2025
-║ For security reasons, I’m not sharing the server code, but the portfolio works without it.
+║ The code for this portfolio is available on GitHub:
+║ https://github.com/Ahmed128aboshady/Ahed-Abo-Shady-Cv-2026
 ╚═══════════════════════╝
 
-╔═ Musics ══════════════╗
-║ The music you hear was made especially for this portfolio by the awesome Kounine (Linktree).
-║ https://linktr.ee/Kounine
-║ They are now under CC0 license, meaning you can do whatever you want with them!
-║ Download them here.
-║ https://github.com/brunosimon/folio-2025/tree/main/static/sounds/musics
-╚═══════════════════════╝
-
-╔═ Some more links ═════╗
-║ Rapier (Physics library)  ⇒ https://rapier.rs/
-║ Howler.js (Audio library) ⇒ https://howlerjs.com/
-║ Amatic SC (Fonts)         ⇒ https://fonts.google.com/specimen/Amatic+SC
-║ Nunito (Fonts).           ⇒ https://fonts.google.com/specimen/Nunito?query=Nunito
+╔═ Contact & Hire ══════╗
+║ WhatsApp ⇒ https://wa.me/201553900394
+║ Email    ⇒ madajo444@gmail.com
+║ LinkedIn ⇒ https://www.linkedin.com/in/ahmed-yousef-55751023a/
 ╚═══════════════════════╝
 `
 let finalText = ''

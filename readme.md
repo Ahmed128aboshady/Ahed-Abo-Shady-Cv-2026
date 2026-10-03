@@ -1,8 +1,12 @@
-# Folio 2025
+# Ahmed Yousef (Ahmed Abo Shady) - 3D Interactive Portfolio 2026
 
-![image info](./static/social/share-image.png)
+Personal 3D interactive portfolio for **Ahmed Yousef (Ahmed Abo Shady)** — Senior Odoo Developer & ERP Solutions Architect.
 
-## Setup
+- **Live URL:** [https://ahmed128aboshady.github.io/Ahed-Abo-Shady-Cv-2026/](https://ahmed128aboshady.github.io/Ahed-Abo-Shady-Cv-2026/)
+- **LinkedIn:** [https://www.linkedin.com/in/ahmed-yousef-55751023a/](https://www.linkedin.com/in/ahmed-yousef-55751023a/)
+- **Live Odoo System:** [https://ahmed-abo-shady.odoo.com](https://ahmed-abo-shady.odoo.com)
+- **Web CV:** [https://ahmed128aboshady.github.io/Ahmed-Abo-Shady-CV/](https://ahmed128aboshady.github.io/Ahmed-Abo-Shady-CV/)
+
 
 Create `.env` file based on `.env.example`
 
