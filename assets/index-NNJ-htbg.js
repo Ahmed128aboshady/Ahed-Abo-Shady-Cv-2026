@@ -86724,10 +86724,10 @@ https://github.com/browserify/crypto-browserify`);
       });
     }
     setMaterial() {
-      const e = new MeshDefaultMaterial({
+      const e = sin$1(positionWorld.x.mul(0.12).add(positionWorld.z.mul(0.08)).add(this.game.wind.localTime.mul(1.8))).mul(0.5).add(0.5), r = mix$1(color$1("#0a6c8a"), color$1("#16a5bd"), e), s = new MeshDefaultMaterial({
         depthWrite: false,
-        colorNode: color$1(16777215),
-        alphaNode: this.detailsMask(),
+        colorNode: r,
+        alphaNode: max$2(float$1(0.85), this.detailsMask()),
         alphaTest: 0,
         hasCoreShadows: false,
         hasDropShadows: true,
@@ -86735,13 +86735,13 @@ https://github.com/browserify/crypto-browserify`);
         hasFog: true,
         hasWater: false,
         transparent: true
-      }), r = e.outputNode, s = Fn$1(() => {
-        const a = this.blurOutputNode(), h = r.a, c = vec4$1(r.rgb, 1);
-        return select$1(h.lessThan(0.5), a, c);
-      })(), o = (a) => {
-        a === 0 ? e.outputNode = s : a === 1 && (e.outputNode = r), e.needsUpdate = true;
+      }), o = s.outputNode, a = Fn$1(() => {
+        const c = this.blurOutputNode(), d = o.a, f = vec4$1(o.rgb, 1);
+        return select$1(d.lessThan(0.5), c, f);
+      })(), h = (c) => {
+        c === 0 ? s.outputNode = a : c === 1 && (s.outputNode = o), s.needsUpdate = true;
       };
-      o(this.game.quality.level), this.game.quality.events.on("change", o), e.maskShadowNode = this.detailsMask().greaterThan(0.5), this.material ? (this.material.dispose(), this.material = e, this.mesh.material = this.material) : this.material = e;
+      h(this.game.quality.level), this.game.quality.events.on("change", h), s.maskShadowNode = this.detailsMask().greaterThan(0.5), this.material ? (this.material.dispose(), this.material = s, this.mesh.material = this.material) : this.material = s;
     }
     setMesh() {
       this.mesh = new Mesh$1(this.geometry, this.material);
@@ -87592,13 +87592,9 @@ https://github.com/browserify/crypto-browserify`);
       super(e), this.localTime = uniform$1(0), this.setLetters(), this.setKiosk(), this.setControls(), this.setBonfire(), this.setAchievement();
     }
     setLetters() {
+      var _a2, _b;
       const e = this.references.items.get("letters");
-      for (const r of e) {
-        const s = r.userData.object.physical;
-        s.colliders[0].setActiveEvents(this.game.RAPIER.ActiveEvents.CONTACT_FORCE_EVENTS), s.colliders[0].setContactForceEventThreshold(5), s.onCollision = (o, a) => {
-          this.game.audio.groups.get("hitBrick").playRandomNext(o, a);
-        };
-      }
+      if (e) for (const r of e) ((_a2 = r.userData) == null ? void 0 : _a2.object) && (this.game.objects.disable(r.userData.object), ((_b = r.userData.object.visual) == null ? void 0 : _b.object3D) && (r.userData.object.visual.object3D.visible = false)), r.visible = false;
     }
     setKiosk() {
       this.game.interactivePoints.create(this.references.items.get("kioskInteractivePoint")[0].position, "Map", InteractivePoints.ALIGN_RIGHT, InteractivePoints.STATE_CONCEALED, () => {
@@ -94458,16 +94454,23 @@ https://github.com/browserify/crypto-browserify`);
   }
   class Scenery {
     constructor() {
+      var _a2;
       this.game = Game.getInstance(), this.references = new References();
       const e = [
         ...this.game.resources.sceneryModel.scene.children
       ];
-      for (const r of e) (typeof r.userData.prevent > "u" || r.userData.prevent === false) && this.game.objects.addFromModel(r, {}, {
-        position: r.position,
-        rotation: r.quaternion,
-        sleeping: true,
-        mass: r.userData.mass
-      }), this.references.parse(r);
+      for (const r of e) {
+        if (r.name.includes("049") || r.name.includes("059") || r.name.includes("064") || r.name.includes("066") || r.name.includes("067") || r.name.includes("071") || r.name.includes("072") || r.name.includes("074") || r.name.includes("075") || r.name.includes("076") || r.name.includes("078") || r.name.includes("079")) {
+          r.visible = false, (_a2 = r.removeFromParent) == null ? void 0 : _a2.call(r);
+          continue;
+        }
+        (typeof r.userData.prevent > "u" || r.userData.prevent === false) && this.game.objects.addFromModel(r, {}, {
+          position: r.position,
+          rotation: r.quaternion,
+          sleeping: true,
+          mass: r.userData.mass
+        }), this.references.parse(r);
+      }
       this.setRoad(), this.game.ticker.events.on("tick", () => {
         this.update();
       });
@@ -94522,12 +94525,395 @@ https://github.com/browserify/crypto-browserify`);
       this.road.glitterVariation.value += this.game.ticker.deltaScaled * 4e-3 + this.game.view.delta.length() * 4e-3;
     }
   }
+  class NavalBattle {
+    constructor() {
+      this.game = Game.getInstance(), this.bounty = 0, this.shipsSunk = 0, this.lastPlayerFire = 0, this.cooldown = 650, this.enemies = [], this.cannonballs = [], this.chests = [], this.effects = [], this.setSounds(), this.setMeshes(), this.setEnemies(), this.setInputs(), this.setUI(), this.game.ticker.events.on("tick", () => {
+        this.update();
+      }, 15);
+    }
+    setSounds() {
+      this.sounds = {}, this.sounds.cannon = this.game.audio.register({
+        path: "sounds/pirate/cannon_1.wav",
+        autoplay: false,
+        loop: false,
+        volume: 0.9,
+        antiSpam: 0.2
+      }), this.sounds.cannonEnemy = this.game.audio.register({
+        path: "sounds/pirate/cannon_2.wav",
+        autoplay: false,
+        loop: false,
+        volume: 0.6,
+        antiSpam: 0.3
+      }), this.sounds.hit = this.game.audio.register({
+        path: "sounds/pirate/hit_wood_0.wav",
+        autoplay: false,
+        loop: false,
+        volume: 0.85,
+        antiSpam: 0.1
+      }), this.sounds.splash = this.game.audio.register({
+        path: "sounds/pirate/splash_0.wav",
+        autoplay: false,
+        loop: false,
+        volume: 0.7,
+        antiSpam: 0.2
+      }), this.sounds.coins = this.game.audio.register({
+        path: "sounds/pirate/coins.wav",
+        autoplay: false,
+        loop: false,
+        volume: 0.95,
+        antiSpam: 0.3
+      });
+    }
+    setMeshes() {
+      this.cannonballGeometry = new SphereGeometry(0.22, 8, 8), this.playerBallMaterial = new MeshStandardMaterial({
+        color: 2039583,
+        roughness: 0.3,
+        metalness: 0.85
+      }), this.enemyBallMaterial = new MeshStandardMaterial({
+        color: 14037041,
+        roughness: 0.4,
+        metalness: 0.4,
+        emissive: 9437184
+      }), this.smokeGeometry = new SphereGeometry(0.35, 6, 6), this.smokeMaterial = new MeshBasicMaterial$1({
+        color: 14540253,
+        transparent: true,
+        opacity: 0.7
+      }), this.flashGeometry = new SphereGeometry(0.45, 6, 6), this.flashMaterial = new MeshBasicMaterial$1({
+        color: 16755234,
+        transparent: true,
+        opacity: 0.95
+      });
+    }
+    setEnemies() {
+      const e = [
+        {
+          name: "Blackbeard's Galleon",
+          model: this.game.resources.pirateGalleonModel,
+          position: new Vector3$1(38, 0.05, -28),
+          rotation: 0.75,
+          maxHp: 100,
+          radius: 3.2,
+          bounty: 500
+        },
+        {
+          name: "Crimson Corsair Frigate",
+          model: this.game.resources.pirateFrigateModel,
+          position: new Vector3$1(-42, 0.05, 34),
+          rotation: -1.2,
+          maxHp: 75,
+          radius: 2.8,
+          bounty: 350
+        },
+        {
+          name: "Ghost Raider Brigantine",
+          model: this.game.resources.pirateBrigantineModel,
+          position: new Vector3$1(26, 0.05, 52),
+          rotation: 2.1,
+          maxHp: 60,
+          radius: 2.5,
+          bounty: 250
+        },
+        {
+          name: "Imperial Hunter Frigate",
+          model: this.game.resources.pirateFrigateModel,
+          position: new Vector3$1(-36, 0.05, -36),
+          rotation: 0.35,
+          maxHp: 75,
+          radius: 2.8,
+          bounty: 350
+        },
+        {
+          name: "Kraken's Dread Galleon",
+          model: this.game.resources.pirateGalleonModel,
+          position: new Vector3$1(62, 0.05, 18),
+          rotation: -2.3,
+          maxHp: 120,
+          radius: 3.4,
+          bounty: 600
+        }
+      ];
+      if (this.game.resources.seaRockModel) {
+        const r = [
+          new Vector3$1(45, 0, -10),
+          new Vector3$1(-25, 0, 48),
+          new Vector3$1(-48, 0, -15),
+          new Vector3$1(12, 0, 65)
+        ];
+        for (const s of r) {
+          const o = this.game.resources.seaRockModel.scene.clone();
+          o.position.copy(s), o.rotation.y = Math.random() * Math.PI * 2, o.scale.setScalar(1.2 + Math.random() * 0.8), this.game.scene.add(o);
+        }
+      }
+      for (const r of e) {
+        if (!r.model) continue;
+        const s = new Group();
+        s.position.copy(r.position), s.rotation.y = r.rotation;
+        const o = r.model.scene.clone();
+        this.game.materials.updateObject(o), s.add(o);
+        const a = new Group();
+        a.position.set(0, 3.2, 0);
+        const h = new BoxGeometry$1(2.4, 0.22, 0.1), c = new MeshBasicMaterial$1({
+          color: 1705221
+        }), d = new Mesh$1(h, c);
+        a.add(d);
+        const f = new BoxGeometry$1(2.3, 0.18, 0.12), p = new MeshBasicMaterial$1({
+          color: 2600544
+        }), m = new Mesh$1(f, p);
+        a.add(m), s.add(a), this.game.scene.add(s);
+        const b = {
+          name: r.name,
+          group: s,
+          model: o,
+          hpGroup: a,
+          hpFill: m,
+          hp: r.maxHp,
+          maxHp: r.maxHp,
+          radius: r.radius,
+          bounty: r.bounty,
+          basePos: r.position.clone(),
+          lastFire: Date.now() + Math.random() * 3e3,
+          isSunk: false,
+          sinkProgress: 0,
+          bobOffset: Math.random() * Math.PI * 2
+        };
+        this.enemies.push(b);
+      }
+    }
+    setInputs() {
+      window.addEventListener("keydown", (e) => {
+        (e.code === "Space" || e.code === "KeyF") && this.firePlayerCannons();
+      }), this.game.canvasElement.addEventListener("pointerdown", (e) => {
+        e.button === 0 && this.firePlayerCannons();
+      });
+    }
+    firePlayerCannons() {
+      const e = Date.now();
+      if (e - this.lastPlayerFire < this.cooldown) return;
+      this.lastPlayerFire = e;
+      const r = this.game.physicalVehicle;
+      if (!r || !r.position) return;
+      const s = r.position.clone(), o = r.quaternion.clone(), a = new Vector3$1(1, 0, 0).applyQuaternion(o).normalize(), h = new Vector3$1(0, 0, 1).applyQuaternion(o).normalize(), c = new Vector3$1(0, 0, -1).applyQuaternion(o).normalize(), d = new Vector3$1(0, 1, 0);
+      let f = null, p = 1 / 0;
+      for (const b of this.enemies) {
+        if (b.isSunk) continue;
+        const w = b.group.position.distanceTo(s);
+        w < p && (p = w, f = b);
+      }
+      const m = [
+        {
+          pos: s.clone().add(c.clone().multiplyScalar(0.75)).add(new Vector3$1(0, 0.7, 0)),
+          dir: c.clone().add(d.clone().multiplyScalar(0.12)).normalize()
+        },
+        {
+          pos: s.clone().add(h.clone().multiplyScalar(0.75)).add(new Vector3$1(0, 0.7, 0)),
+          dir: h.clone().add(d.clone().multiplyScalar(0.12)).normalize()
+        }
+      ];
+      if (f && p < 45) {
+        const b = f.group.position.clone().sub(s).normalize();
+        m.push({
+          pos: s.clone().add(a.clone().multiplyScalar(1.2)).add(new Vector3$1(0, 0.7, 0)),
+          dir: b.add(new Vector3$1(0, 0.15, 0)).normalize()
+        });
+      }
+      this.sounds.cannon.play(), this.game.explosions && this.game.explosions.explode(s, 4, 1.2);
+      for (const b of m) {
+        this.spawnFlash(b.pos), this.spawnSmoke(b.pos);
+        const w = new Mesh$1(this.cannonballGeometry, this.playerBallMaterial);
+        w.position.copy(b.pos), this.game.scene.add(w);
+        const M = 36 + Math.random() * 4, R = b.dir.clone().multiplyScalar(M);
+        this.cannonballs.push({
+          mesh: w,
+          velocity: R,
+          owner: "player",
+          created: e,
+          ttl: 2600
+        });
+      }
+      this.fireButton && (this.fireButton.style.transform = "scale(0.88)", setTimeout(() => {
+        this.fireButton.style.transform = "scale(1)";
+      }, 120));
+    }
+    spawnFlash(e) {
+      const r = new Mesh$1(this.flashGeometry, this.flashMaterial.clone());
+      r.position.copy(e), this.game.scene.add(r), this.effects.push({
+        mesh: r,
+        created: Date.now(),
+        ttl: 90,
+        update: (s) => {
+          const o = 1 + s * 2.5;
+          r.scale.set(o, o, o), r.material.opacity = 1 - s;
+        }
+      });
+    }
+    spawnSmoke(e) {
+      const r = new Mesh$1(this.smokeGeometry, this.smokeMaterial.clone());
+      r.position.copy(e), this.game.scene.add(r), this.effects.push({
+        mesh: r,
+        created: Date.now(),
+        ttl: 600,
+        update: (s) => {
+          const o = 1 + s * 3.5;
+          r.scale.set(o, o, o), r.position.y += 0.015, r.material.opacity = (1 - s) * 0.7;
+        }
+      });
+    }
+    fireEnemyCannon(e) {
+      var _a2;
+      const r = (_a2 = this.game.physicalVehicle) == null ? void 0 : _a2.position;
+      if (!r) return;
+      this.sounds.cannonEnemy.play();
+      const s = e.group.position.clone().add(new Vector3$1(0, 1.2, 0)), o = r.clone().sub(s).normalize();
+      o.y += 0.18, o.normalize(), this.spawnFlash(s), this.spawnSmoke(s);
+      const a = new Mesh$1(this.cannonballGeometry, this.enemyBallMaterial);
+      a.position.copy(s), this.game.scene.add(a), this.cannonballs.push({
+        mesh: a,
+        velocity: o.multiplyScalar(28),
+        owner: "enemy",
+        created: Date.now(),
+        ttl: 2800
+      });
+    }
+    damageEnemy(e, r, s) {
+      e.hp -= r, this.sounds.hit.play(), this.game.world.fireballs && this.game.world.fireballs.create(s, 2.2, 2.5), this.spawnFlash(s), this.spawnSmoke(s);
+      const o = Math.max(0, e.hp / e.maxHp);
+      e.hpFill.scale.x = o, e.hpFill.position.x = -(1 - o) * 1.15, o < 0.3 ? e.hpFill.material.color.setHex(15158332) : o < 0.6 && e.hpFill.material.color.setHex(15965202), e.hp <= 0 && !e.isSunk && this.sinkEnemy(e);
+    }
+    sinkEnemy(e) {
+      e.isSunk = true, this.shipsSunk++, this.bounty += e.bounty;
+      const r = e.group.position;
+      this.game.world.fireballs && (this.game.world.fireballs.create(r.clone().add(new Vector3$1(0, 1, 0)), 4, 4), setTimeout(() => {
+        var _a2;
+        (_a2 = this.game.world.fireballs) == null ? void 0 : _a2.create(r.clone().add(new Vector3$1(1, 1.5, 0.5)), 3, 3);
+      }, 300), setTimeout(() => {
+        var _a2;
+        (_a2 = this.game.world.fireballs) == null ? void 0 : _a2.create(r.clone().add(new Vector3$1(-1, 0.8, -0.5)), 3.5, 3.5);
+      }, 600)), this.spawnLootChest(r.clone()), this.notify(`\u2694\uFE0F Sunk ${e.name}! +$${e.bounty} Gold Bounty!`), this.updateHUD();
+    }
+    spawnLootChest(e) {
+      if (!this.game.resources.lootChestModel) return;
+      const r = this.game.resources.lootChestModel.scene.clone();
+      r.position.set(e.x, 0.12, e.z), this.game.materials.updateObject(r), this.game.scene.add(r), this.chests.push({
+        mesh: r,
+        basePos: e.clone(),
+        created: Date.now(),
+        collected: false
+      });
+    }
+    notify(e) {
+      const r = document.getElementById("pirate-banner");
+      r && (r.innerHTML = `<span style="color:#ffd700;font-weight:bold;">${e}</span>`, r.style.opacity = "1", r.style.transform = "translateY(0px)", clearTimeout(this.bannerTimer), this.bannerTimer = setTimeout(() => {
+        r.style.opacity = "0.9", this.updateHUD();
+      }, 4e3));
+    }
+    setUI() {
+      const e = document.createElement("div");
+      e.id = "pirate-hud", e.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+            font-family: 'Pally', sans-serif, system-ui;
+        `;
+      const r = document.createElement("div");
+      r.id = "pirate-banner", r.style.cssText = `
+            background: linear-gradient(135deg, rgba(16, 28, 48, 0.92), rgba(28, 16, 38, 0.92));
+            color: #ffffff;
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            border-radius: 30px;
+            padding: 8px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 215, 0, 0.25);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            text-align: center;
+        `, r.innerHTML = `\u{1F3F4}\u200D\u2620\uFE0F <strong>Ahmed's Naval Fleet Battle</strong> | Sunk: 0/${this.enemies.length} | Bounty: $0`, e.appendChild(r), document.body.appendChild(e);
+      const s = document.createElement("button");
+      s.id = "pirate-fire-button", s.innerHTML = `
+            <div style="font-size:24px;line-height:1;">\u{1F4A5}</div>
+            <div style="font-size:12px;font-weight:800;letter-spacing:1px;margin-top:2px;">FIRE</div>
+            <div style="font-size:9px;opacity:0.75;margin-top:1px;">[SPACE]</div>
+        `, s.style.cssText = `
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #e74c3c 30%, #c0392b 90%);
+            border: 3px solid #f39c12;
+            color: #ffffff;
+            font-family: 'Pally', sans-serif, system-ui;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6), 0 0 20px rgba(243, 156, 18, 0.4);
+            z-index: 1001;
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        `, s.addEventListener("pointerdown", (o) => {
+        o.stopPropagation(), this.firePlayerCannons();
+      }), document.body.appendChild(s), this.fireButton = s;
+    }
+    updateHUD() {
+      const e = document.getElementById("pirate-banner");
+      e && (e.innerHTML = `\u{1F3F4}\u200D\u2620\uFE0F <strong>Ahmed's Naval Fleet Battle</strong> | Sunk: ${this.shipsSunk}/${this.enemies.length} | Bounty: <span style="color:#ffd700;">$${this.bounty}</span>`);
+    }
+    update() {
+      var _a2, _b;
+      const e = this.game.ticker.deltaScaled, r = this.game.ticker.elapsed, s = Date.now(), o = (_a2 = this.game.physicalVehicle) == null ? void 0 : _a2.position;
+      for (let h = this.enemies.length - 1; h >= 0; h--) {
+        const c = this.enemies[h];
+        if (((_b = this.game.view) == null ? void 0 : _b.camera) && c.hpGroup.quaternion.copy(this.game.view.camera.quaternion), c.isSunk) {
+          c.sinkProgress += e * 0.4, c.group.position.y -= e * 0.35, c.group.rotation.x += e * 0.15, c.group.rotation.z += e * 0.08, c.sinkProgress >= 3.5 && (this.game.scene.remove(c.group), this.enemies.splice(h, 1));
+          continue;
+        }
+        const d = Math.sin(r * 2.2 + c.bobOffset) * 0.06, f = Math.sin(r * 1.5 + c.bobOffset) * 0.035;
+        c.group.position.y = c.basePos.y + d, c.group.rotation.z = f, o && s - c.lastFire > 4500 && c.group.position.distanceTo(o) < 38 && (c.lastFire = s + Math.random() * 1500, this.fireEnemyCannon(c));
+      }
+      const a = -11.5 * e;
+      for (let h = this.cannonballs.length - 1; h >= 0; h--) {
+        const c = this.cannonballs[h];
+        if (s - c.created > c.ttl || c.mesh.position.y < -0.1) {
+          c.mesh.position.y <= 0.1 && (this.sounds.splash.play(), this.spawnSmoke(c.mesh.position)), this.game.scene.remove(c.mesh), this.cannonballs.splice(h, 1);
+          continue;
+        }
+        if (c.velocity.y += a, c.mesh.position.x += c.velocity.x * e, c.mesh.position.y += c.velocity.y * e, c.mesh.position.z += c.velocity.z * e, c.owner === "player") for (const f of this.enemies) {
+          if (f.isSunk) continue;
+          if (c.mesh.position.distanceTo(f.group.position) < f.radius) {
+            this.damageEnemy(f, 25, c.mesh.position.clone()), this.game.scene.remove(c.mesh), this.cannonballs.splice(h, 1);
+            break;
+          }
+        }
+        else c.owner === "enemy" && o && c.mesh.position.distanceTo(o) < 1.8 && (this.sounds.hit.play(), this.game.world.fireballs && this.game.world.fireballs.create(c.mesh.position, 2, 2), this.game.scene.remove(c.mesh), this.cannonballs.splice(h, 1));
+      }
+      if (o) for (let h = this.chests.length - 1; h >= 0; h--) {
+        const c = this.chests[h];
+        if (c.collected) continue;
+        c.mesh.rotation.y += e * 0.8, c.mesh.position.y = 0.12 + Math.sin(r * 3 + c.created) * 0.05, c.mesh.position.distanceTo(o) < 2.8 && (c.collected = true, this.sounds.coins.play(), this.bounty += 250, this.notify("\u{1F4B0} Sunk Fleet Loot Collected! +$250 Gold!"), this.updateHUD(), this.spawnFlash(c.mesh.position), this.game.scene.remove(c.mesh), this.chests.splice(h, 1));
+      }
+      for (let h = this.effects.length - 1; h >= 0; h--) {
+        const c = this.effects[h], f = (s - c.created) / c.ttl;
+        f >= 1 ? (this.game.scene.remove(c.mesh), this.effects.splice(h, 1)) : c.update(f);
+      }
+    }
+  }
   class World {
     constructor() {
       this.game = Game.getInstance(), this.step(0);
     }
     step(e) {
-      e === 0 ? (this.grid = new Grid(), this.intro = new Intro()) : e === 1 ? (this.visualVehicle = new VisualVehicle(this.game.resources.vehicle.scene), this.floor = new Floor(), this.waterSurface = new WaterSurface(), this.grass = new Grass(), this.windLines = new WindLines(), this.confetti = new Confetti(), this.leaves = new Leaves(), this.rain = new RainLines(), this.lightnings = new Lightnings(), this.fireballs = new Fireballs(), this.snow = new Snow(), this.visualTornado = new VisualTornado(), this.bushes = new Bushes(), this.birchTrees = new Trees("Birch Tree", this.game.resources.birchTreesVisualModel.scene, this.game.resources.birchTreesReferencesModel.scene.children, "#ff4f2b", "#ff903f"), this.oakTrees = new Trees("Oak Tree", this.game.resources.oakTreesVisualModel.scene, this.game.resources.oakTreesReferencesModel.scene.children, "#b4b536", "#d8cf3b"), this.cherryTrees = new Trees("Cherry Tree", this.game.resources.cherryTreesVisualModel.scene, this.game.resources.cherryTreesReferencesModel.scene.children, "#ff6d6d", "#ff9990"), this.flowers = new Flowers(), this.bricks = new Bricks(), this.fences = new Fences(), this.benches = new Benches(), this.explosiveCrates = new ExplosiveCrates(), this.poleLights = new PoleLights(), this.lanterns = new Lanterns(), this.scenery = new Scenery(), this.areas = new Areas()) : e === 2 && (this.whispers = new Whispers());
+      e === 0 ? (this.grid = new Grid(), this.intro = new Intro()) : e === 1 ? (this.visualVehicle = new VisualVehicle(this.game.resources.vehicle.scene), this.floor = new Floor(), this.waterSurface = new WaterSurface(), this.grass = new Grass(), this.windLines = new WindLines(), this.confetti = new Confetti(), this.leaves = new Leaves(), this.rain = new RainLines(), this.lightnings = new Lightnings(), this.fireballs = new Fireballs(), this.snow = new Snow(), this.visualTornado = new VisualTornado(), this.bushes = new Bushes(), this.birchTrees = new Trees("Birch Tree", this.game.resources.birchTreesVisualModel.scene, this.game.resources.birchTreesReferencesModel.scene.children, "#ff4f2b", "#ff903f"), this.oakTrees = new Trees("Oak Tree", this.game.resources.oakTreesVisualModel.scene, this.game.resources.oakTreesReferencesModel.scene.children, "#b4b536", "#d8cf3b"), this.cherryTrees = new Trees("Cherry Tree", this.game.resources.cherryTreesVisualModel.scene, this.game.resources.cherryTreesReferencesModel.scene.children, "#ff6d6d", "#ff9990"), this.flowers = new Flowers(), this.bricks = new Bricks(), this.fences = new Fences(), this.benches = new Benches(), this.explosiveCrates = new ExplosiveCrates(), this.poleLights = new PoleLights(), this.lanterns = new Lanterns(), this.scenery = new Scenery(), this.areas = new Areas(), this.grass.mesh.visible = false, this.navalBattle = new NavalBattle()) : e === 2 && (this.whispers = new Whispers());
     }
     setPhysicalFloor() {
       this.game.objects.add(null, {
@@ -95561,16 +95947,16 @@ https://github.com/browserify/crypto-browserify`);
       const s = r.getContext("2d");
       this.colors = [
         {
-          stop: 0.1,
-          value: "#ffa94e"
+          stop: 0.08,
+          value: "#dfba76"
         },
         {
-          stop: 0.3,
-          value: "#5bc2b9"
+          stop: 0.28,
+          value: "#1ca5b8"
         },
         {
-          stop: 0.9,
-          value: "#13375f"
+          stop: 0.85,
+          value: "#062648"
         }
       ];
       const o = () => {
@@ -95587,7 +95973,7 @@ https://github.com/browserify/crypto-browserify`);
       }).on("change", o);
     }
     setNodes() {
-      this.grassColorUniform = uniform$1(color$1("#b8b62e")), this.tracksDelta = uniform$1(vec2$1(0));
+      this.grassColorUniform = uniform$1(color$1("#116a82")), this.tracksDelta = uniform$1(vec2$1(0));
       const e = Fn$1(([r]) => r.div(this.subdivision).div(1.5).add(0.5));
       this.terrainNode = Fn$1(([r]) => {
         const s = e(r), o = texture$1(this.game.resources.terrainTexture, s), a = texture$1(this.game.tracks.renderTarget.texture, r.sub(-this.game.tracks.halfSize).sub(this.tracksDelta).div(this.game.tracks.size));
@@ -99349,7 +99735,7 @@ https://github.com/browserify/crypto-browserify`);
   }
   class Water {
     constructor() {
-      if (this.game = Game.getInstance(), this.surfaceElevation = -0.3, this.depthElevation = -1.5, this.surfaceElevationUniform = uniform$1(this.surfaceElevation), this.surfaceThicknessUniform = uniform$1(0.013), this.game.debug.active) {
+      if (this.game = Game.getInstance(), this.surfaceElevation = 0.04, this.depthElevation = -1.5, this.surfaceElevationUniform = uniform$1(this.surfaceElevation), this.surfaceThicknessUniform = uniform$1(0.013), this.game.debug.active) {
         const e = this.game.debug.panel.addFolder({
           title: "\u{1F4A7} Water",
           expanded: false
@@ -108397,7 +108783,7 @@ ${e.tab}if ( ${m} ) {
           }
         ]
       ]), this.options = new Options(), this.respawns = new Respawns("landing"), this.view = new View(), this.rendering.setPostprocessing(), this.rendering.start(), this.reveal = new Reveal(), this.noises = new Noises(), this.weather = new Weather(), this.wind = new Wind(), this.tracks = new Tracks(), this.lighting = new Lighting(), this.fog = new Fog(), this.water = new Water(), this.materials = new Materials(), this.objects = new Objects(), this.explosions = new Explosions(), this.world = new World();
-      const a = __vitePreload(() => import("./rapier-Be3aYqbY.js").then(async (m) => {
+      const a = __vitePreload(() => import("./rapier-XpshcBVs.js").then(async (m) => {
         await m.__tla;
         return m;
       }), [], import.meta.url), h = this.resourcesLoader.load([
@@ -108657,6 +109043,31 @@ ${e.tab}if ( ${m} ) {
           (f) => {
             f.minFilter = NearestFilter$1, f.magFilter = NearestFilter$1, f.generateMipmaps = false, f.wrapS = ClampToEdgeWrapping$1, f.wrapT = ClampToEdgeWrapping$1, f.colorSpace = SRGBColorSpace$1;
           }
+        ],
+        [
+          "pirateGalleonModel",
+          `models/pirate_galleon.glb${o}`,
+          "gltf"
+        ],
+        [
+          "pirateFrigateModel",
+          `models/pirate_frigate.glb${o}`,
+          "gltf"
+        ],
+        [
+          "pirateBrigantineModel",
+          `models/pirate_brigantine.glb${o}`,
+          "gltf"
+        ],
+        [
+          "lootChestModel",
+          `models/loot_chest.glb${o}`,
+          "gltf"
+        ],
+        [
+          "seaRockModel",
+          `models/sea_rock.glb${o}`,
+          "gltf"
         ]
       ], (f, p) => {
         this.world.intro.updateProgress(1 - f / p);
