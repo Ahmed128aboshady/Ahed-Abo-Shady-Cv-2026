@@ -456,6 +456,9 @@ export class PhysicsVehicle
 
     updatePrePhysics()
     {
+        if(!this.game.player)
+            return
+
         // Engine force
         const topSpeed = lerp(this.topSpeed, this.topSpeedBoost, this.game.player.boosting)
         const overflowSpeed = Math.max(0, this.speed - topSpeed)

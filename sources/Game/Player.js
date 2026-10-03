@@ -28,8 +28,8 @@ export class Player
         this.position2 = new THREE.Vector2(this.position.x, this.position.z)
         this.rotationY = 0
 
-        this.setSounds()
         this.setInputs()
+        this.setSounds()
         this.setDistanceDriven()
         this.setUnstuck()
         // this.setBackWheel()
@@ -82,10 +82,14 @@ export class Player
         })
 
         // Trigger cannon shot on honk action press
-        this.game.inputs.actions.get('honk').events.on('press', () =>
+        const honkAction = this.game.inputs.actions.get('honk')
+        if(honkAction?.events)
         {
-            this.sounds.honk.play()
-        })
+            honkAction.events.on('press', () =>
+            {
+                this.sounds.honk.play()
+            })
+        }
         this.sounds.spring1 = this.game.audio.register({
             path: 'sounds/vehicle/springs/HandleSqueak_BW.60329.mp3',
             autoplay: false,
