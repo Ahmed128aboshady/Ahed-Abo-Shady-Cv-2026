@@ -149,6 +149,10 @@ export class Audio
         this.playlist = {}
         this.playlist.songs = [
             {
+                path: 'sounds/pirate/pirate_theme.wav',
+                name: 'Pirate Shanty — Jolly Roger'
+            },
+            {
                 path: 'sounds/musics/Sudo.mp3',
                 name: 'Sudo.mp3'
             },

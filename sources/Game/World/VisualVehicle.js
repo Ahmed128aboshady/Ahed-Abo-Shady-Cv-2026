@@ -423,6 +423,12 @@ export class VisualVehicle
         this.parts.chassis.position.copy(physicalVehicle.position)
         this.parts.chassis.quaternion.copy(physicalVehicle.quaternion)
         
+        // Nautical sailing dynamics: gentle wave bobbing & subtle heel into turns
+        const waveBob = Math.sin(this.game.ticker.elapsed * 2.8) * 0.035
+        const steeringRoll = - this.game.player.steering * 0.14
+        this.parts.chassis.position.y += waveBob
+        this.parts.chassis.rotation.z += steeringRoll
+        
         // Wheels
         this.wheels.steering += ((this.game.player.steering * physicalVehicle.steeringAmplitude) - this.wheels.steering) * this.game.ticker.deltaScaled * 16
 

@@ -69,15 +69,22 @@ export class Player
         })
         this.sounds.honk = this.game.audio.register(
         {
-            path: 'sounds/vehicle/honk/Car Horn Long 4.mp3',
-            autoplay: true,
-            loop: true,
-            volume: 0.4,
-            antiSpam: 0.1,
-            onPlaying: (item) =>
+            path: 'sounds/pirate/cannon_1.wav',
+            autoplay: false,
+            loop: false,
+            volume: 0.85,
+            antiSpam: 0.4,
+            onPlay: (item) =>
             {
-                item.volume = this.game.inputs.actions.get('honk').active ? 0.5 : 0
+                item.volume = 0.8 + Math.random() * 0.2
+                item.rate = 0.9 + Math.random() * 0.2
             }
+        })
+
+        // Trigger cannon shot on honk action press
+        this.game.inputs.actions.get('honk').events.on('press', () =>
+        {
+            this.sounds.honk.play()
         })
         this.sounds.spring1 = this.game.audio.register({
             path: 'sounds/vehicle/springs/HandleSqueak_BW.60329.mp3',
@@ -151,9 +158,9 @@ export class Player
 
         // Engine and speed
         {
-            // Engine
+            // Sailing wake sound through ocean waves
             this.game.audio.register({
-                path: 'sounds/vehicle/engine/muscle car engine loop idle.mp3',
+                path: 'sounds/pirate/sailing.wav',
                 autoplay: true,
                 loop: true,
                 volume: 0,
@@ -161,13 +168,13 @@ export class Player
                 {
                     const accelerating = Math.abs(this.game.player.accelerating) * 0.5
                     const boosting = this.game.player.boosting + 1
-                    const volume = Math.max(0.05, accelerating * boosting * 0.8)
+                    const volume = Math.max(0.08, accelerating * boosting * 0.75)
                     const delta = volume - item.volume
                     const easing = delta > 0 ? 10 : 2.5
                     
                     item.volume += delta * this.game.ticker.deltaScaled * easing
 
-                    const rate = remapClamp(accelerating * boosting, 0, 1, 0.6, 1.1)
+                    const rate = remapClamp(accelerating * boosting, 0, 1, 0.8, 1.25)
                     item.rate += (rate - item.rate) * this.game.ticker.deltaScaled * 5
                 }
             })
