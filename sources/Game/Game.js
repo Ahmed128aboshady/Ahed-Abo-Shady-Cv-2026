@@ -171,6 +171,11 @@ export class Game
                 [ 'careerUzikTexture',                     `career/careerUzik.${compressedTextureExtension}${cb}`,                               compressedTextureFormat, (resource) => { resource.flipY = false; resource.minFilter = THREE.LinearFilter; resource.magFilter = THREE.LinearFilter; resource.generateMipmaps = false; resource.wrapS = THREE.ClampToEdgeWrapping; resource.wrapT = THREE.ClampToEdgeWrapping; } ],
                 [ 'timeMachineScreenMGSTexture',           `timeMachine/timeMachineScreenMGS.${compressedTextureExtension}${cb}`,                compressedTextureFormat, (resource) => { resource.minFilter = THREE.NearestFilter; resource.magFilter = THREE.NearestFilter; resource.generateMipmaps = false; resource.wrapS = THREE.ClampToEdgeWrapping; resource.wrapT = THREE.ClampToEdgeWrapping; resource.colorSpace = THREE.SRGBColorSpace; } ],
                 [ 'timeMachineScreenFolioTexture',         `timeMachine/timeMachineScreenFolio.${compressedTextureExtension}${cb}`,              compressedTextureFormat, (resource) => { resource.minFilter = THREE.NearestFilter; resource.magFilter = THREE.NearestFilter; resource.generateMipmaps = false; resource.wrapS = THREE.ClampToEdgeWrapping; resource.wrapT = THREE.ClampToEdgeWrapping; resource.colorSpace = THREE.SRGBColorSpace; } ],
+                [ 'pirateGalleonModel',                    `models/pirate_galleon.glb${cb}`,                                     'gltf' ],
+                [ 'pirateFrigateModel',                    `models/pirate_frigate.glb${cb}`,                                     'gltf' ],
+                [ 'pirateBrigantineModel',                 `models/pirate_brigantine.glb${cb}`,                                  'gltf' ],
+                [ 'lootChestModel',                        `models/loot_chest.glb${cb}`,                                         'gltf' ],
+                [ 'seaRockModel',                          `models/sea_rock.glb${cb}`,                                           'gltf' ],
             ],
             (toLoad, total) =>
             {

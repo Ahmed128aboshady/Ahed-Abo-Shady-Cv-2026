@@ -13,6 +13,14 @@ export class Scenery
         const model = [...this.game.resources.sceneryModel.scene.children]
         for(const child of model)
         {
+            // Skip old Bruno Simon letter blocks
+            if(child.name.includes('049') || child.name.includes('059') || child.name.includes('064') || child.name.includes('066') || child.name.includes('067') || child.name.includes('071') || child.name.includes('072') || child.name.includes('074') || child.name.includes('075') || child.name.includes('076') || child.name.includes('078') || child.name.includes('079'))
+            {
+                child.visible = false
+                child.removeFromParent?.()
+                continue
+            }
+
             // Add
             if(typeof child.userData.prevent === 'undefined' || child.userData.prevent === false)
             {
