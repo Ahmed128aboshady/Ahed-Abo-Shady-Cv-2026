@@ -297,13 +297,10 @@ export class WaterSurface
 
     setMaterial()
     {
-        const waveNode = sin(positionWorld.x.mul(0.12).add(positionWorld.z.mul(0.08)).add(this.game.wind.localTime.mul(1.8))).mul(0.5).add(0.5)
-        const oceanColorNode = mix(color('#0a6c8a'), color('#16a5bd'), waveNode)
-
         const material = new MeshDefaultMaterial({
             depthWrite: false,
-            colorNode: oceanColorNode,
-            alphaNode: max(float(0.85), this.detailsMask()),
+            colorNode: color(0xffffff),
+            alphaNode: this.detailsMask(),
             alphaTest: 0,
             hasCoreShadows: false,
             hasDropShadows: true,

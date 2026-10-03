@@ -7,7 +7,7 @@ export class Water
     {
         this.game = Game.getInstance()
 
-        this.surfaceElevation = 0.04
+        this.surfaceElevation = -0.3
         this.depthElevation = -1.5
 
         this.surfaceElevationUniform = uniform(this.surfaceElevation)

@@ -108,8 +108,8 @@ export class NavalBattle
             {
                 name: "Blackbeard's Galleon",
                 model: this.game.resources.pirateGalleonModel,
-                position: new THREE.Vector3(38, 0.05, -28),
-                rotation: 0.75,
+                position: new THREE.Vector3(14, 0.05, -12),
+                rotation: 0.5,
                 maxHp: 100,
                 radius: 3.2,
                 bounty: 500
@@ -117,8 +117,8 @@ export class NavalBattle
             {
                 name: "Crimson Corsair Frigate",
                 model: this.game.resources.pirateFrigateModel,
-                position: new THREE.Vector3(-42, 0.05, 34),
-                rotation: -1.2,
+                position: new THREE.Vector3(-14, 0.05, 10),
+                rotation: -1.0,
                 maxHp: 75,
                 radius: 2.8,
                 bounty: 350
@@ -126,7 +126,7 @@ export class NavalBattle
             {
                 name: "Ghost Raider Brigantine",
                 model: this.game.resources.pirateBrigantineModel,
-                position: new THREE.Vector3(26, 0.05, 52),
+                position: new THREE.Vector3(28, 0.05, 26),
                 rotation: 2.1,
                 maxHp: 60,
                 radius: 2.5,
@@ -135,7 +135,7 @@ export class NavalBattle
             {
                 name: "Imperial Hunter Frigate",
                 model: this.game.resources.pirateFrigateModel,
-                position: new THREE.Vector3(-36, 0.05, -36),
+                position: new THREE.Vector3(-28, 0.05, -24),
                 rotation: 0.35,
                 maxHp: 75,
                 radius: 2.8,
@@ -144,7 +144,7 @@ export class NavalBattle
             {
                 name: "Kraken's Dread Galleon",
                 model: this.game.resources.pirateGalleonModel,
-                position: new THREE.Vector3(62, 0.05, 18),
+                position: new THREE.Vector3(45, 0.05, 0),
                 rotation: -2.3,
                 maxHp: 120,
                 radius: 3.4,
@@ -169,6 +169,24 @@ export class NavalBattle
                 rock.scale.setScalar(1.2 + Math.random() * 0.8)
                 this.game.scene.add(rock)
             }
+        }
+
+        // Add harbor defense cannons
+        if(this.game.resources.cannonModel)
+        {
+            const cannon1 = this.game.resources.cannonModel.scene.clone()
+            cannon1.position.set(2.2, 0.05, -2.8)
+            cannon1.rotation.y = 0.6
+            cannon1.scale.setScalar(0.4)
+            this.game.materials.updateObject(cannon1)
+            this.game.scene.add(cannon1)
+
+            const cannon2 = this.game.resources.cannonModel.scene.clone()
+            cannon2.position.set(-3.8, 0.05, -2.8)
+            cannon2.rotation.y = -0.4
+            cannon2.scale.setScalar(0.4)
+            this.game.materials.updateObject(cannon2)
+            this.game.scene.add(cannon2)
         }
 
         for(const def of enemyDefs)

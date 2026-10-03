@@ -176,6 +176,7 @@ export class Game
                 [ 'pirateBrigantineModel',                 `models/pirate_brigantine.glb${cb}`,                                  'gltf' ],
                 [ 'lootChestModel',                        `models/loot_chest.glb${cb}`,                                         'gltf' ],
                 [ 'seaRockModel',                          `models/sea_rock.glb${cb}`,                                           'gltf' ],
+                [ 'cannonModel',                           `scenery/cannon.glb${cb}`,                                            'gltf' ],
             ],
             (toLoad, total) =>
             {
