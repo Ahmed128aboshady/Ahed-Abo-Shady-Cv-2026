@@ -86724,10 +86724,10 @@ https://github.com/browserify/crypto-browserify`);
       });
     }
     setMaterial() {
-      const e = sin$1(positionWorld.x.mul(0.12).add(positionWorld.z.mul(0.08)).add(this.game.wind.localTime.mul(1.8))).mul(0.5).add(0.5), r = mix$1(color$1("#0a6c8a"), color$1("#16a5bd"), e), s = new MeshDefaultMaterial({
+      const e = new MeshDefaultMaterial({
         depthWrite: false,
-        colorNode: r,
-        alphaNode: max$2(float$1(0.85), this.detailsMask()),
+        colorNode: color$1(16777215),
+        alphaNode: this.detailsMask(),
         alphaTest: 0,
         hasCoreShadows: false,
         hasDropShadows: true,
@@ -86735,13 +86735,13 @@ https://github.com/browserify/crypto-browserify`);
         hasFog: true,
         hasWater: false,
         transparent: true
-      }), o = s.outputNode, a = Fn$1(() => {
-        const c = this.blurOutputNode(), d = o.a, f = vec4$1(o.rgb, 1);
-        return select$1(d.lessThan(0.5), c, f);
-      })(), h = (c) => {
-        c === 0 ? s.outputNode = a : c === 1 && (s.outputNode = o), s.needsUpdate = true;
+      }), r = e.outputNode, s = Fn$1(() => {
+        const a = this.blurOutputNode(), h = r.a, c = vec4$1(r.rgb, 1);
+        return select$1(h.lessThan(0.5), a, c);
+      })(), o = (a) => {
+        a === 0 ? e.outputNode = s : a === 1 && (e.outputNode = r), e.needsUpdate = true;
       };
-      h(this.game.quality.level), this.game.quality.events.on("change", h), s.maskShadowNode = this.detailsMask().greaterThan(0.5), this.material ? (this.material.dispose(), this.material = s, this.mesh.material = this.material) : this.material = s;
+      o(this.game.quality.level), this.game.quality.events.on("change", o), e.maskShadowNode = this.detailsMask().greaterThan(0.5), this.material ? (this.material.dispose(), this.material = e, this.mesh.material = this.material) : this.material = e;
     }
     setMesh() {
       this.mesh = new Mesh$1(this.geometry, this.material);
@@ -94589,8 +94589,8 @@ https://github.com/browserify/crypto-browserify`);
         {
           name: "Blackbeard's Galleon",
           model: this.game.resources.pirateGalleonModel,
-          position: new Vector3$1(38, 0.05, -28),
-          rotation: 0.75,
+          position: new Vector3$1(14, 0.05, -12),
+          rotation: 0.5,
           maxHp: 100,
           radius: 3.2,
           bounty: 500
@@ -94598,8 +94598,8 @@ https://github.com/browserify/crypto-browserify`);
         {
           name: "Crimson Corsair Frigate",
           model: this.game.resources.pirateFrigateModel,
-          position: new Vector3$1(-42, 0.05, 34),
-          rotation: -1.2,
+          position: new Vector3$1(-14, 0.05, 10),
+          rotation: -1,
           maxHp: 75,
           radius: 2.8,
           bounty: 350
@@ -94607,7 +94607,7 @@ https://github.com/browserify/crypto-browserify`);
         {
           name: "Ghost Raider Brigantine",
           model: this.game.resources.pirateBrigantineModel,
-          position: new Vector3$1(26, 0.05, 52),
+          position: new Vector3$1(28, 0.05, 26),
           rotation: 2.1,
           maxHp: 60,
           radius: 2.5,
@@ -94616,7 +94616,7 @@ https://github.com/browserify/crypto-browserify`);
         {
           name: "Imperial Hunter Frigate",
           model: this.game.resources.pirateFrigateModel,
-          position: new Vector3$1(-36, 0.05, -36),
+          position: new Vector3$1(-28, 0.05, -24),
           rotation: 0.35,
           maxHp: 75,
           radius: 2.8,
@@ -94625,7 +94625,7 @@ https://github.com/browserify/crypto-browserify`);
         {
           name: "Kraken's Dread Galleon",
           model: this.game.resources.pirateGalleonModel,
-          position: new Vector3$1(62, 0.05, 18),
+          position: new Vector3$1(45, 0.05, 0),
           rotation: -2.3,
           maxHp: 120,
           radius: 3.4,
@@ -94643,6 +94643,12 @@ https://github.com/browserify/crypto-browserify`);
           const o = this.game.resources.seaRockModel.scene.clone();
           o.position.copy(s), o.rotation.y = Math.random() * Math.PI * 2, o.scale.setScalar(1.2 + Math.random() * 0.8), this.game.scene.add(o);
         }
+      }
+      if (this.game.resources.cannonModel) {
+        const r = this.game.resources.cannonModel.scene.clone();
+        r.position.set(2.2, 0.05, -2.8), r.rotation.y = 0.6, r.scale.setScalar(0.4), this.game.materials.updateObject(r), this.game.scene.add(r);
+        const s = this.game.resources.cannonModel.scene.clone();
+        s.position.set(-3.8, 0.05, -2.8), s.rotation.y = -0.4, s.scale.setScalar(0.4), this.game.materials.updateObject(s), this.game.scene.add(s);
       }
       for (const r of e) {
         if (!r.model) continue;
@@ -99735,7 +99741,7 @@ https://github.com/browserify/crypto-browserify`);
   }
   class Water {
     constructor() {
-      if (this.game = Game.getInstance(), this.surfaceElevation = 0.04, this.depthElevation = -1.5, this.surfaceElevationUniform = uniform$1(this.surfaceElevation), this.surfaceThicknessUniform = uniform$1(0.013), this.game.debug.active) {
+      if (this.game = Game.getInstance(), this.surfaceElevation = -0.3, this.depthElevation = -1.5, this.surfaceElevationUniform = uniform$1(this.surfaceElevation), this.surfaceThicknessUniform = uniform$1(0.013), this.game.debug.active) {
         const e = this.game.debug.panel.addFolder({
           title: "\u{1F4A7} Water",
           expanded: false
@@ -108783,7 +108789,7 @@ ${e.tab}if ( ${m} ) {
           }
         ]
       ]), this.options = new Options(), this.respawns = new Respawns("landing"), this.view = new View(), this.rendering.setPostprocessing(), this.rendering.start(), this.reveal = new Reveal(), this.noises = new Noises(), this.weather = new Weather(), this.wind = new Wind(), this.tracks = new Tracks(), this.lighting = new Lighting(), this.fog = new Fog(), this.water = new Water(), this.materials = new Materials(), this.objects = new Objects(), this.explosions = new Explosions(), this.world = new World();
-      const a = __vitePreload(() => import("./rapier-XpshcBVs.js").then(async (m) => {
+      const a = __vitePreload(() => import("./rapier-C17tSkGa.js").then(async (m) => {
         await m.__tla;
         return m;
       }), [], import.meta.url), h = this.resourcesLoader.load([
@@ -109067,6 +109073,11 @@ ${e.tab}if ( ${m} ) {
         [
           "seaRockModel",
           `models/sea_rock.glb${o}`,
+          "gltf"
+        ],
+        [
+          "cannonModel",
+          `scenery/cannon.glb${o}`,
           "gltf"
         ]
       ], (f, p) => {
